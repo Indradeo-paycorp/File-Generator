@@ -21,13 +21,19 @@ public class FileRouter extends RouteBuilder {
 	@Value("${file.prefix}")
 	private String filePrefix;
 	
+	@Value("${file.source.path}")
+	private String sourcePath;
+	
+	@Value("${file.taget.path}")
+	private String targetPath;
+	
 	@Override
 	public void configure() throws Exception {
 		
-		from("file:/home/user/indradeo/FileFolder/Source?noop=true&idempotent=true")
+		from(sourcePath+"?noop=true&idempotent=true")
 		.loop(numberOfCopy)
 		.process(new FileProcessor(filePrefix, fileSuffix))
-		.to("file:/home/user/indradeo/FileFolder/target")
+		.to(targetPath)
 		.log("Files Save to target folder")
 		.end();
 		System.out.println(numberOfCopy);
